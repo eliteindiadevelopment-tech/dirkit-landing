@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DirKit: launch a niche directory with paid listings</title>
+  <meta name="description" content="DirKit is a Next.js starter kit for building a niche directory website with paid and featured listings, admin tools and SEO. Join the early-access waitlist.">
+
+  <!-- Small tab icon (a blue square with the letter D), so no extra file is needed -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%233b5bdb%22/><text x=%2250%22 y=%2272%22 font-size=%2260%22 font-weight=%22700%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22>D</text></svg>">
+
+  <!-- Link preview tags (used by Reddit, X, Slack and others) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="DirKit: launch a niche directory with paid listings">
+  <meta property="og:description" content="A Next.js starter kit for niche directory websites. Early access waitlist is open.">
+
+  <style>
+    /* ---------- Design tokens ---------- */
+    :root {
+      --bg: #ffffff;
+      --surface: #f5f6f8;
+      --text: #14161a;
+      --muted: #5b6270;
+      --border: #e1e4ea;
+      --accent: #3b5bdb;
+      --accent-text: #ffffff;
+      --radius: 12px;
+      --max-width: 880px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1115;
+        --surface: #181b21;
+        --text: #eef0f4;
+        --muted: #a0a7b4;
+        --border: #2a2f39;
+        --accent: #6c8cff;
+        --accent-text: #0f1115;
+      }
+    }
+
+    /* ---------- Base ---------- */
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    section { padding: 48px 0; }
+
+    h1, h2, h3 { line-height: 1.25; margin: 0 0 12px; }
+    h1 { font-size: clamp(1.9rem, 6vw, 3rem); }
+    h2 { font-size: clamp(1.4rem, 4vw, 1.9rem); }
+    h3 { font-size: 1.05rem; }
+    p  { margin: 0 0 12px; }
+
+    .muted { color: var(--muted); }
+    .text-center { text-align: center; }
+
+    /* ---------- Header and hero ---------- */
+    .site-header { padding: 20px 0; }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand { font-weight: 700; font-size: 1.15rem; }
+
+    .header-link {
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .header-link:hover { border-color: var(--accent); }
+    .header-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+    .hero { padding-top: 32px; text-align: center; }
+    .hero p { max-width: 640px; margin-left: auto; margin-right: auto; }
+
+    .badge {
+      display: inline-block;
+      margin-bottom: 16px;
+      padding: 4px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* ---------- Waitlist form ---------- */
+    .waitlist-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin: 24px auto 8px;
+      max-width: 520px;
+    }
+
+    .waitlist-form input[type="email"] {
+      flex: 1 1 240px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    .button {
+      padding: 12px 20px;
+      border: 0;
+      border-radius: var(--radius);
+      background: var(--accent);
+      color: var(--accent-text);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .button:hover { opacity: 0.9; }
+
+    input:focus-visible, .button:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .form-label {
+      width: 100%;
+      text-align: center;
+    }
+
+    .form-note { font-size: 0.85rem; text-align: center; }
+
+    /* Closing call to action near the bottom of the page. */
+    .cta-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    /* Honeypot field: hidden from people, bots tend to fill it in. */
+    .honeypot { display: none; }
+
+    /* ---------- Cards ---------- */
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .card {
+      padding: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .card p { margin: 0; color: var(--muted); }
+
+    /* ---------- Pricing ---------- */
+    .price-box {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 24px;
+      text-align: center;
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
+    }
+
+    .price { font-size: 2.4rem; font-weight: 700; margin: 8px 0; }
+    .price s { font-size: 1.2rem; font-weight: 400; color: var(--muted); }
+
+    /* ---------- FAQ ---------- */
+    details {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    summary { cursor: pointer; font-weight: 600; }
+    details p { margin-top: 8px; color: var(--muted); }
+
+    /* ---------- Footer ---------- */
+    .site-footer {
+      padding: 32px 0;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <span class="brand">DirKit</span>
+      <a class="header-link" href="#waitlist-form">Join the waitlist</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container">
+        <span class="badge">Early access: in development</span>
+        <h1>Launch a niche directory in days, with paid listings built in</h1>
+        <p class="muted">
+          DirKit is a Next.js starter kit for directory websites. Auth, listings,
+          featured placements, an admin panel and SEO are planned for v1, so you can
+          spend your time on the niche and the audience.
+        </p>
+
+        <!--
+          Waitlist form. It posts to Web3Forms, which emails each signup to you.
+          The access key below is a public Web3Forms key, so it is safe in client-side HTML.
+          If you reuse this page, create your own key at https://web3forms.com
+        -->
+        <form id="waitlist-form" class="waitlist-form" action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value="6494e8db-391c-4082-8415-92edf27d74ac">
+          <input type="hidden" name="subject" value="New DirKit waitlist signup">
+          <input type="checkbox" name="botcheck" class="honeypot" tabindex="-1" autocomplete="off">
+
+          <label for="email" class="form-label muted">
+            Email for early-access news and the launch discount
+          </label>
+          <input id="email" type="email" name="email" placeholder="you@example.com" required>
+          <button class="button" type="submit">Join the waitlist</button>
+        </form>
+        <p class="form-note muted">
+          We only use your email to tell you about DirKit. No spam, and you can ask to be removed at any time.
+        </p>
+      </div>
+    </section>
+
+    <!-- Problem -->
+    <section>
+      <div class="container">
+        <h2>Building a directory from scratch takes longer than it looks</h2>
+        <p class="muted">
+          Every directory needs the same groundwork: user accounts, a listing
+          submission flow, payments for featured spots, an admin area to review
+          entries, and SEO so people can find it. DirKit packages that groundwork
+          so you do not rebuild it for each new niche.
+        </p>
+      </div>
+    </section>
+
+    <!-- Audience -->
+    <section>
+      <div class="container">
+        <h2>Who DirKit is for</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Indie makers</h3>
+            <p>You have a niche in mind and want a working directory without weeks of setup.</p>
+          </div>
+          <div class="card">
+            <h3>Developers and agencies</h3>
+            <p>You build directories or listing sites for clients and want a clean base to start from.</p>
+          </div>
+          <div class="card">
+            <h3>Founders using AI coding tools</h3>
+            <p>You want a well-structured project that tools like Claude or Cursor can extend safely.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Planned features -->
+    <section>
+      <div class="container">
+        <h2>Planned for v1</h2>
+        <p class="muted">This list is the current plan. It may change before release.</p>
+        <div class="grid">
+          <div class="card">
+            <h3>Listings and categories</h3>
+            <p>Submission form, categories, search and filters for your niche.</p>
+          </div>
+          <div class="card">
+            <h3>Paid and featured listings</h3>
+            <p>Charge businesses for visibility with one-time or recurring plans.</p>
+          </div>
+          <div class="card">
+            <h3>Admin panel</h3>
+            <p>Review, approve and edit listings and see what is happening.</p>
+          </div>
+          <div class="card">
+            <h3>SEO basics</h3>
+            <p>Sitemap, metadata helpers and fast pages built on Next.js.</p>
+          </div>
+          <div class="card">
+            <h3>Global and India payments</h3>
+            <p>Merchant-of-record checkout for worldwide buyers, plus Razorpay for India.</p>
+          </div>
+          <div class="card">
+            <h3>AI-agent friendly</h3>
+            <p>An AGENTS.md file and clear structure so coding assistants understand the project.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section>
+      <div class="container">
+        <h2 class="text-center">Early-bird price</h2>
+        <div class="price-box">
+          <h3>DirKit, one-time purchase</h3>
+          <div class="price"><s>$79</s> $49</div>
+          <p class="muted">Planned early-bird price for waitlist members. Final pricing is confirmed at launch.</p>
+          <p class="muted">Not charged today. Joining the waitlist is free.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section>
+      <div class="container">
+        <h2>Questions</h2>
+        <details>
+          <summary>Is DirKit available now?</summary>
+          <p>Not yet. It is in development. The waitlist is how you get notified and get the early-bird price.</p>
+        </details>
+        <details>
+          <summary>What is the tech stack?</summary>
+          <p>The plan is Next.js (App Router), TypeScript, Tailwind CSS, PostgreSQL and Prisma.</p>
+        </details>
+        <details>
+          <summary>Will there be a license for client work?</summary>
+          <p>The license terms will be published before launch, including what is allowed for client projects.</p>
+        </details>
+        <details>
+          <summary>What about refunds?</summary>
+          <p>The refund policy will be published before launch.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- Closing call to action -->
+    <section class="cta-section">
+      <div class="container">
+        <h2>Get notified when early access opens</h2>
+        <p class="muted">Waitlist members get the early-bird price. No payment is taken now.</p>
+
+        <!-- Same form and access key as the one above. -->
+        <form class="waitlist-form" action="https://api.web3forms.com/submit" method="POST">
+          <input type="hidden" name="access_key" value="6494e8db-391c-4082-8415-92edf27d74ac">
+          <input type="hidden" name="subject" value="New DirKit waitlist signup (bottom form)">
+          <input type="checkbox" name="botcheck" class="honeypot" tabindex="-1" autocomplete="off">
+
+          <label for="email-bottom" class="form-label muted">Your email address</label>
+          <input id="email-bottom" type="email" name="email" placeholder="you@example.com" required>
+          <button class="button" type="submit">Join the waitlist</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 DirKit. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
